@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Web AR Photo Box</title>
+  <title>Web AR Photo</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
@@ -14,7 +14,7 @@
 <body style="margin:0; overflow:hidden;">
 
 <!-- 画像選択ボタン -->
-<div style="position:fixed; top:10px; left:10px; z-index:999; background:white; padding:5px;">
+<div style="position:fixed; top:10px; left:10px; z-index:999; background:white; padding:6px;">
   <input type="file" accept="image/*" id="imageInput">
 </div>
 
@@ -22,15 +22,13 @@
 
   <a-marker preset="hiro">
 
-    <!-- ここに写真が貼られる箱 -->
-    <a-box id="arImage"
+    <!-- ここに写真が表示される（まっすぐな板） -->
+    <a-plane id="arImage"
       position="0 0.5 0"
-      width="1"
+      width="1.5"
       height="1"
-      depth="0.3"
-      rotation="-90 0 0"
       material="side: double;">
-    </a-box>
+    </a-plane>
 
   </a-marker>
 
@@ -40,7 +38,7 @@
 
 <script>
 const input = document.getElementById("imageInput");
-const box = document.getElementById("arImage");
+const plane = document.getElementById("arImage");
 
 input.addEventListener("change", function(event) {
   const file = event.target.files[0];
@@ -48,7 +46,7 @@ input.addEventListener("change", function(event) {
 
   const reader = new FileReader();
   reader.onload = function(e) {
-    box.setAttribute("material", "src", e.target.result);
+    plane.setAttribute("material", "src", e.target.result);
   };
   reader.readAsDataURL(file);
 });

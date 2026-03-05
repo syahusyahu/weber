@@ -2,13 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Web AR Photo</title>
+  <title>ARjs Screen Marker Mode</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
 
   <!-- AR.js -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+  <!-- look-at コンポーネント -->
+  <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
 </head>
 
 <body style="margin:0; overflow:hidden;">
@@ -18,17 +21,23 @@
   <input type="file" accept="image/*" id="imageInput">
 </div>
 
-<a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+<a-scene embedded
+         vr-mode-ui="enabled: false"
+         arjs="sourceType: webcam; debugUIEnabled: false;">
 
-  <a-marker preset="hiro">
+  <!-- 画面表示マーカー向け安定設定 -->
+  <a-marker preset="hiro"
+            smooth="true"
+            smoothCount="20"
+            smoothTolerance="0.01"
+            smoothThreshold="5">
 
-    <!-- ここに写真が表示される（まっすぐな板） -->
+    <!-- 常に正面を向く板 -->
     <a-plane id="arImage"
-      position="0 0.5 0"
-      width="1.5"
-      height="1"
-      rotation="-90 0 0"
-      material="side: double;">
+             position="0 0 0"
+             rotation="-90 0 0"
+             look-at="[camera]"
+             material="side: double;">
     </a-plane>
 
   </a-marker>
@@ -47,12 +56,25 @@ input.addEventListener("change", function(event) {
 
   const reader = new FileReader();
   reader.onload = function(e) {
-    plane.setAttribute("material", "src", e.target.result);
+
+    const img = new Image();
+    img.onload = function() {
+
+      const aspect = img.width / img.height;
+
+      // 高さ1固定、横幅を比率で調整
+      plane.setAttribute("height", 1);
+      plane.setAttribute("width", aspect);
+
+      plane.setAttribute("material", "src", e.target.result);
+    };
+
+    img.src = e.target.result;
   };
+
   reader.readAsDataURL(file);
 });
 </script>
 
 </body>
 </html>
-

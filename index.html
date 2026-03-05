@@ -7,18 +7,25 @@
 
 <body style="margin:0; overflow:hidden;">
 
+<!-- 画像選択ボタン -->
 <div style="position:fixed; top:10px; left:10px; z-index:999;">
   <input type="file" accept="image/*" id="imageInput">
 </div>
 
 <a-scene embedded arjs>
   <a-marker preset="hiro">
-    <a-image id="arImage"
+
+    <!-- ★ここが箱になる -->
+    <a-box id="arImage"
       position="0 0.5 0"
+      depth="0.2"
+      height="1"
       width="1"
-      height="1">
-    </a-image>
+      material="side:double;">
+    </a-box>
+
   </a-marker>
+
   <a-entity camera></a-entity>
 </a-scene>
 
@@ -30,7 +37,7 @@ input.addEventListener("change", function(event) {
   const file = event.target.files[0];
   const reader = new FileReader();
   reader.onload = function(e) {
-    image.setAttribute("src", e.target.result);
+    image.setAttribute("material", "src", e.target.result);
   };
   reader.readAsDataURL(file);
 });
@@ -38,4 +45,3 @@ input.addEventListener("change", function(event) {
 
 </body>
 </html>
-
